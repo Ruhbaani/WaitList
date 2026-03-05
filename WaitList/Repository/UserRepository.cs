@@ -58,6 +58,11 @@ namespace WaitList.API
             return true;
 
         }
+        public Task AddUser(Users user)
+        {
+            // TODO: implement
+            return Task.CompletedTask;
+        }
 
 
     }

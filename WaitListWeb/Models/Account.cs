@@ -1,8 +1,14 @@
-﻿namespace WaitListWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WaitListWeb.Models
 {
     public class Account
     {
         public Account() { }
+
+        [Key]
+        public int AccountId { get; set; } = 0;
+
         public string OrgName { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
 
 namespace WaitListWeb.Models
 {
@@ -15,6 +16,8 @@ namespace WaitListWeb.Models
         public string Phone { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public int AccountID { get; set; } =0;
+
+        [Key]
         public int UserID { get; set; } = 0;
 
 

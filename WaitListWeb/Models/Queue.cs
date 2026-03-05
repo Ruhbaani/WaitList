@@ -1,13 +1,18 @@
-﻿namespace WaitListWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
 
+namespace WaitListWeb.Models
 {
     public class Queue
     {
         public Queue() { }
-        public string CustomerID { get; set; } = string.Empty;
-        public string AccountID { get; set; } = string.Empty;
+
+        [Key]
+        public int QueueID { get; set; } = 0;
+
+        public int CustomerID { get; set; } = 0;
+        public int AccountID { get; set; } = 0;
         public string DateTime { get; set; } = string.Empty;
-        public string ServiceID { get; set; } = string.Empty;
+        public int ServiceID { get; set; } = 0;
 
 
     }

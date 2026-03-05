@@ -36,18 +36,28 @@ namespace WaitList.API
         }
 
 
-        [HttpPost(Name = "CreateUser")]
-        public async Task<bool> CreateUser(Users user)
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] Users user)
         {
+            var success = await _userService.CreateUser(user);
 
-            _userService.CreateUser(user);
+            if (!success)
+                return BadRequest("Could not create user.");
+
+            return Ok();
         }
 
-        [HttpPost(Name = "AddUser")]
-        public async Task<bool> AddUser(Users user)
-        {
 
-            _userService.AddUser(user);
+        [HttpPost]
+        public async Task<IActionResult> AddUser([FromBody] Users user)
+        {
+            // await your service call
+            var success = await _userService.AddUser(user);
+
+            if (!success)
+                return BadRequest("Could not add user.");
+
+            return Ok();
         }
 
     }
