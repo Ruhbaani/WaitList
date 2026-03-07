@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using WaitListWeb.Models;
 using WaitListWeb.Security;
 
@@ -14,19 +13,20 @@ public static class IdentitySeed
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        // Roles
         foreach (var role in AppRoles.All)
         {
             if (!await roleManager.RoleExistsAsync(role))
+            {
                 await roleManager.CreateAsync(new IdentityRole(role));
+            }
         }
 
-        // SystemAdmin
         var email = config["Seed:SystemAdminEmail"] ?? "admin@waitlist.local";
         var password = config["Seed:SystemAdminPassword"] ?? "ChangeMe!12345";
-        var acctId = config["Seed:SystemAdminAccountId"] ?? "0";
+        var acctId = int.Parse(config["Seed:SystemAdminAccountId"] ?? "0");
 
         var admin = await userManager.FindByEmailAsync(email);
+
         if (admin is null)
         {
             admin = new ApplicationUser
@@ -34,6 +34,8 @@ public static class IdentitySeed
                 UserName = email,
                 Email = email,
                 EmailConfirmed = true,
+                FirstName = "System",
+                LastName = "Admin",
                 AccountId = acctId
             };
 
@@ -46,6 +48,8 @@ public static class IdentitySeed
         }
 
         if (!await userManager.IsInRoleAsync(admin, AppRoles.SystemAdmin))
+        {
             await userManager.AddToRoleAsync(admin, AppRoles.SystemAdmin);
+        }
     }
 }

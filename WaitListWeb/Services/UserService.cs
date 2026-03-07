@@ -13,13 +13,13 @@ namespace WaitListWeb.Services
 
         }
 
-        public Task<List<Users>> GetUserList()
+        public Task<List<ApplicationUser>> GetUserList()
         {
             // TODO: replace with real implementation
-            return Task.FromResult(new List<Users>());
+            return Task.FromResult(new List<ApplicationUser>());
         }
 
-        public Task<bool> CreateUser(Users user)
+        public Task<bool> CreateUser(ApplicationUser user)
         {
             // TODO: replace with real implementation
             return Task.FromResult(true);

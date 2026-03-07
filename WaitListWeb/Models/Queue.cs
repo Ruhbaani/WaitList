@@ -7,13 +7,12 @@ namespace WaitListWeb.Models
         public Queue() { }
 
         [Key]
-        public int QueueID { get; set; } = 0;
+        public int QueueId { get; set; } = 0;
 
-        public int CustomerID { get; set; } = 0;
-        public int AccountID { get; set; } = 0;
-        public string DateTime { get; set; } = string.Empty;
-        public int ServiceID { get; set; } = 0;
+        public int AccountId { get; set; } = 0;
 
+        public string Name { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;  
 
     }
 }

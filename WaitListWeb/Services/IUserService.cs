@@ -4,10 +4,10 @@ namespace WaitListWeb.Services
 {
     public interface IUserService
     {
-        Task<List<Users>> GetUserList();
+        Task<List<ApplicationUser>> GetUserList();
 
 
-        Task<bool> CreateUser(Users user);
+        Task<bool> CreateUser(ApplicationUser user);
 
     }
 }

@@ -5,7 +5,9 @@ using WaitListWeb.Models;
 
 namespace WaitListWeb.Controllers;
 
-public class AuthController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class AuthController : ControllerBase
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -16,42 +18,72 @@ public class AuthController : Controller
         _userManager = userManager;
     }
 
-    [HttpGet("/auth/login")]
+    [HttpPost("login")]
     [AllowAnonymous]
-    public IActionResult Login(string? returnUrl = null)
+    public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
-        ViewBag.ReturnUrl = returnUrl;
-        return View();
-    }
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    [HttpPost("/auth/login")]
-    [AllowAnonymous]
-    public async Task<IActionResult> LoginPost(string email, string password, string? returnUrl = null)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is null)
-        {
-            ModelState.AddModelError("", "Invalid login.");
-            return View("Login");
-        }
+            return Unauthorized(new { message = "Invalid email or password." });
 
-        var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: true);
+        var result = await _signInManager.PasswordSignInAsync(
+            user,
+            dto.Password,
+            isPersistent: false,
+            lockoutOnFailure: true);
+
         if (!result.Succeeded)
-        {
-            ModelState.AddModelError("", "Invalid login.");
-            return View("Login");
-        }
+            return Unauthorized(new { message = "Invalid email or password." });
 
-        return Redirect(returnUrl ?? "/");
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return Ok(new
+        {
+            message = "Login successful.",
+            user = new
+            {
+                user.Id,
+                user.Email,
+                user.UserName,
+                user.FirstName,
+                user.LastName,
+                user.AccountId,
+                Roles = roles
+            }
+        });
     }
 
-    [HttpPost("/auth/logout")]
+    [HttpPost("logout")]
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return Ok(new { message = "Logged out successfully." });
     }
 
-    [HttpGet("/auth/denied")]
-    public IActionResult Denied() => View();
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> Me()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+            return Unauthorized();
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return Ok(new
+        {
+            user.Id,
+            user.Email,
+            user.UserName,
+            user.FirstName,
+            user.LastName,
+            user.PhoneNumber,
+            user.AccountId,
+            Roles = roles
+        });
+    }
 }
