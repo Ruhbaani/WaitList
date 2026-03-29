@@ -21,10 +21,9 @@ public static class IdentitySeed
             }
         }
 
-        var email = config["Seed:SystemAdminEmail"] ?? "admin@waitlist.local";
-        var password = config["Seed:SystemAdminPassword"] ?? "ChangeMe!12345";
+        var email = config["Seed:SystemAdminEmail"] ?? "ruby@waitlist.local";
+        var password = config["Seed:SystemAdminPassword"] ?? "Group5*";
         var acctId = int.Parse(config["Seed:SystemAdminAccountId"] ?? "0");
-
         var admin = await userManager.FindByEmailAsync(email);
 
         if (admin is null)
@@ -39,10 +38,10 @@ public static class IdentitySeed
                 AccountId = acctId
             };
 
-            var create = await userManager.CreateAsync(admin, password);
-            if (!create.Succeeded)
+            var createAdmin = await userManager.CreateAsync(admin, password);
+            if (!createAdmin.Succeeded)
             {
-                var errors = string.Join("; ", create.Errors.Select(e => e.Description));
+                var errors = string.Join("; ", createAdmin.Errors.Select(e => e.Description));
                 throw new InvalidOperationException($"Failed to create SystemAdmin: {errors}");
             }
         }
